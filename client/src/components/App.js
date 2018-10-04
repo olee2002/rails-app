@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 import { ThemeProvider } from 'styled-components'
 
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { LandingPage } from './LandingPage'
 
 const theme = {
@@ -22,7 +22,9 @@ const App = ({ store }) => (
   <Provider store={store}>
     <ThemeProvider theme={theme}>
       <Router>
-          <Route exact path="/" component={LandingPage}/>
+        <Switch>
+          <Route exact path="/" component={LandingPage} />
+        </Switch>
       </Router>
     </ThemeProvider>
   </Provider>

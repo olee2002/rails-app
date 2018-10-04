@@ -18,6 +18,7 @@ gem 'devise'
 gem 'omniauth-salesloft'
 gem 'omniauth'
 gem 'foreman'
+gem 'httparty'
 gem 'rake'
 gem 'dotenv-rails'
 
