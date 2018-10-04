@@ -6,6 +6,7 @@ import ReactTooltip from 'react-tooltip';
 
 import Count from './Count';
 
+
 const Container = styled.div`
 display: flex;
 justify-content:center;
@@ -32,6 +33,10 @@ button{
     cursor: pointer;
 }
 `
+const allLetters = [];
+for (var i = 65; i < 91; i++) {
+    allLetters.push({ letter: String.fromCharCode(i), count: 0 });
+};
 
 class People extends Component {
 
@@ -39,7 +44,7 @@ class People extends Component {
         super()
         this.state = {
             people: [],
-            uniqueLetters: [],
+            letterFrequency: [],
             clicked: false
         }
     }
@@ -50,30 +55,22 @@ class People extends Component {
                 this.setState({ people: res.people })
             })
     }
-    handleClick(email) {
+    handleLetters(email) {
 
-        const chars = email.toLowerCase().match(/[a-z]/g).sort()
-        const arr = []
-        for (let i = 0; i < chars.length; i++) {
-            if (!arr.includes(chars[i])) arr.push(chars[i])
-        }
-        const uniqueLetters = arr.map(e => {
-            return { letter: e, count: 0 }
-        })
-        for (let i = 0; i < chars.length; i++) {
-            for (let j = 0; j < uniqueLetters.length; j++) {
-                if (chars[i] === uniqueLetters[j].letter) {
-                    uniqueLetters[j].count++
+        const chars = email.toUpperCase().match(/[A-Z]/g).sort()
+
+        for (let i = 0; i < allLetters.length; i++) {
+            for (let j = 0; j < allLetters.length; j++) {
+                if (chars[i] === allLetters[j].letter) {
+                    allLetters[j].count++
                 }
             }
         }
-
-        this.setState({ clicked: true, uniqueLetters })
     }
 
     render() {
-        const { people, clicked, uniqueLetters } = this.state;
-
+        const { people } = this.state;
+        people.map(person => this.handleLetters(person.email_address))
         return (
             <Container>
                 <div style={{ margin: 15 }} >
@@ -82,26 +79,26 @@ class People extends Component {
                     <hr />
                     <table>
                         <tr>
+                            <th>Index</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Title</th>
                             <th>Note</th>
                         </tr>
                         {
-                            people.map(person =>
+                            people.map((person, i) =>
                                 <tr key={person.id} >
+                                    <td>{i + 1}</td>
                                     <td>{person.first_name} {person.last_name}</td>
                                     <td>{person.email_address}</td>
                                     <td>{person.title}</td>
-                                    <td><ReactTooltip />
-                                        <button onClick={() => this.handleClick(person.email_address)}>Email Char.Count</button></td>
+                                    <td></td>
                                 </tr>
                             )
                         }
                     </table>
                 </div>
-                {clicked ? <Count uniqueLetters={uniqueLetters} /> : null}
-
+                <Count allLetters={allLetters} />
             </Container>
         );
     }

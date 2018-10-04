@@ -1,7 +1,7 @@
 
 class Person < ApplicationRecord
   API_BASE = "https://api.salesloft.com/v2"
-  PAGE_SIZE = 100
+  PAGE_SIZE = 2
 
   include HTTParty
 
@@ -25,10 +25,10 @@ class Person < ApplicationRecord
   person = Person.new
   person.get_people.each do |record|
     Person.create do |person|
-      person.first_name = record["first_name"]
-      person.last_name = record["last_name"]
-      person.email_address = record["email_address"]
-      person.title = record["title"]
+      !person.first_name ? person.first_name = record["first_name"] : Nil
+      !person.last_name ? person.last_name = record["last_name"] : Nil
+      !person.email_address ? person.email_address = record["email_address"] : Nil
+      !person.title ? person.title = record["title"] : Nil
     end
   end
 end
