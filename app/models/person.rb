@@ -5,7 +5,7 @@ class Person < ApplicationRecord
 
   include HTTParty
 
-  def process_page
+  def get_people
     response = HTTParty.get(url, headers: headers)
     raise StandardError.new(response.parsed_response) unless response.success?
     data = response["data"]
@@ -13,7 +13,7 @@ class Person < ApplicationRecord
   end
 
   def url
-    "#{API_BASE}/people?per_page=#{PAGE_SIZE}&sort=updated_at&sort_direction=ASC"
+    "#{API_BASE}/people?per_page=#{PAGE_SIZE}"
   end
 
   def headers
@@ -23,8 +23,7 @@ class Person < ApplicationRecord
   end
 
   person = Person.new
-  person.process_page.each do |record|
-    puts JSON.pretty_generate(record)
+  person.get_people.each do |record|
     Person.create do |person|
       person.first_name = record["first_name"]
       person.last_name = record["last_name"]
